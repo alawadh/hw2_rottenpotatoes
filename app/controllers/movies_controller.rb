@@ -2,6 +2,7 @@ class MoviesController < ApplicationController
 
   def initialize
 	super
+	@all_ratings = Movie.all_ratings
   end
 
   def show
@@ -13,12 +14,14 @@ class MoviesController < ApplicationController
   def index
     #@movies = Movie.all
     @sort = params[:sort]
-    @movies = Movie.order(@sort)
+    @movies = Movie.order(@sort) #activerecord method call
+    @ratings_ary = @ratings ? @ratings.keys : @all_ratings
+    @movies = Movie.where(:rating => @ratings_ary).order(@sort)
   end
   
-  def sort
-    @movies = Movie.all.sort! { |a,b| a.name.downcase <=> b.name.downcase }
-  end
+  #def sort
+  #  @movies = Movie.all.sort! { |a,b| a.name.downcase <=> b.name.downcase }
+  #end
 
   def new
     # default: render 'new' template
